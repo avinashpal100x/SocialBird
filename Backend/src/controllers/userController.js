@@ -7,15 +7,26 @@ import cloudinary from '../config/cloudinary.js'
 // get profile
 export const getProfile = async (req, res) => {
     try {
-        const userId = req.userId;
+        const userId = req.params.id;
 
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found",
+        if (!userId) {
+            return res.status(401).json({
+                message: "Unauthorized",
                 success: false
-            })
+            });
         }
+
+        const user = await User.findById(userId)
+            .populate({
+                path: "posts",
+                options: {
+                    sort: { createdAt: -1 }
+                }
+            })
+            .populate({
+                path: "bookmarks"
+            });
+
 
         return res.status(200).json({
             user: formatUser(user),

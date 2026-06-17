@@ -2,11 +2,13 @@ import React from 'react'
 import Feed from '../components/posts/Feed'
 import RightSidebar from '../components/sidebar/RightSidebar'
 import useGetAllPosts from '../hooks/useGetAllPosts.js'
+import useGetAllSuggestedUsers from '../hooks/useGetAllSuggestedUsers.js'
 
 
 const HomePage = () => {
 
   useGetAllPosts();
+  useGetAllSuggestedUsers();
 
   return (
     <div className="flex">

@@ -2,11 +2,13 @@ import React from 'react'
 import Profile from '../components/profile/Profile'
 
 
+
 const ProfilePage = () => {
+
   return (
     <div>
       <>
-      <Profile></Profile>
+        <Profile></Profile>
       </>
     </div>
   )
