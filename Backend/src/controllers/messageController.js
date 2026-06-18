@@ -1,5 +1,8 @@
 import { Conversation } from '../models/conversationModel.js'
 import { Message } from '../models/messageModel.js'
+import { getIO, getReceiverSocketId } from '../socket/socket.js'
+import { SOCKET_EVENTS } from '../socket/socketEvents.js'
+
 
 
 // send message
@@ -29,18 +32,24 @@ export const sendMessage = async (req, res) => {
 
         // new message
         const newMessage = await Message.create({
+            conversationId: conversation._id,
             senderId,
             receiverId,
             message
         })
 
-        // push in conversation
-        if (newMessage) conversation.messages.push(newMessage._id);
-        await conversation.save();
+        const receieverSocketId = getReceiverSocketId(receiverId);
+        if (receieverSocketId) {
+            const io = getIO();
+
+            io.to(receieverSocketId)
+                .emit(SOCKET_EVENTS.RECEIVE_MESSAGE, newMessage)
+        }
 
         return res.status(201).json({
             success: true,
-            newMessage
+            message: "Message Sent",
+            data: newMessage
         })
     }
     catch (error) {
@@ -53,28 +62,28 @@ export const sendMessage = async (req, res) => {
 }
 
 // get message
-export const getMessage = async (req,res)=>{
+export const getMessage = async (req, res) => {
     try {
         const senderId = req.userId;
         const receiverId = req.params.id;
 
         // check conversation
         const conversation = await Conversation.find({
-            participants:{$all:[senderId,receiverId]}
+            participants: { $all: [senderId, receiverId] }
         })
 
         // if there is no previous conversation return empty array
-        if(!conversation) return res.status(200).json({
-            success:true,
-            messages:[]
+        if (!conversation) return res.status(200).json({
+            success: true,
+            messages: []
         })
 
         return res.status(200).jsom({
-            success:true,
-            messages:conversation?.messages
+            success: true,
+            messages: conversation?.messages
         })
-    } 
+    }
     catch (error) {
-        
+
     }
 }

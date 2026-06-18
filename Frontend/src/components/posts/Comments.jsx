@@ -142,7 +142,7 @@ const Comments = ({ open, setOpen }) => {
                                             <Avatar className='w-10 h-10 ring-2 ring-orange-100 shadow-md'>
 
                                                 <AvatarImage
-                                                    src={selectedPost.author.profilePhoto}
+                                                    src={selectedPost?.author?.profilePhoto}
                                                 />
 
                                                 <AvatarFallback>
@@ -157,12 +157,12 @@ const Comments = ({ open, setOpen }) => {
 
                                             <Link>
                                                 <h1 className='font-semibold text-[14px] tracking-tight text-[#181818] hover:text-[#ff6b35] transition-all duration-300'>
-                                                    {selectedPost.author.username}
+                                                    {selectedPost?.author?.username}
                                                 </h1>
                                             </Link>
 
                                             <span className='text-[12px] text-gray-500 line-clamp-1'>
-                                                {selectedPost.author.bio}
+                                                {selectedPost?.author?.bio}
                                             </span>
 
                                         </div>

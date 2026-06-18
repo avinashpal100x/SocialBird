@@ -46,12 +46,14 @@ export const getProfile = async (req, res) => {
 export const editProfile = async (req, res) => {
     try {
         const userId = req.userId;
-        const { bio, gender } = req.body;
+        const { name, bio, gender, username } = req.body;
         const profilePhoto = req.file;
 
         const user = await User.findById(userId);
         if (!user) return res.status(404).json({ message: "User not found", success: false })
 
+        if (username) user.username = username;
+        if (name) user.name = name;
         if (bio) user.bio = bio;
         if (gender) user.gender = gender;
 

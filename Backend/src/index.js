@@ -1,9 +1,9 @@
 import express, { urlencoded } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import http from 'http'
 import dotenv from 'dotenv';
 dotenv.config();
-import bodyParser from 'body-parser'
 
 import databaseConnect from './config/database.js'
 import authRouter from './routes/authRoute.js'
@@ -11,6 +11,8 @@ import userRouter from './routes/userRoute.js'
 import postRouter from './routes/postRoute.js'
 import commentRouter from './routes/commentRoute.js'
 import messageRouter from './routes/messageRoute.js'
+
+import { initializeSocket } from './socket/socket.js'
 
 
 const PORT = process.env.PORT || 4000;
@@ -38,7 +40,11 @@ app.use("/api/v1/message", messageRouter)
 // server
 databaseConnect()
     .then(() => {
-        app.listen(PORT, () => {
+
+        const server = http.createServer(app)
+        initializeSocket(server)
+
+        server.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
     })

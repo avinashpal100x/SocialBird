@@ -6,8 +6,7 @@ import { Link } from 'react-router-dom'
 const SuggestedUsers = () => {
 
     const { suggestedUsers } = useSelector(store => store.auth)
-
-    console.log(suggestedUsers);
+    
 
     return (
         <div className='mt-5 px-5 py-4 rounded-2xl bg-white border border-orange-100 shadow-sm'>

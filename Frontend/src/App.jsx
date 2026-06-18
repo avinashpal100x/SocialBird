@@ -1,5 +1,6 @@
 import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import HomePage from './pages/HomePage'
 import LayoutPage from './pages/LayoutPage'
@@ -7,6 +8,8 @@ import ProfilePage from './pages/ProfilePage'
 import Signup from './pages/AuthPage/SignupPage'
 import Login from './pages/AuthPage/LoginPage'
 import EditProfile from './pages/EditProfilePage'
+import ChatPage from './pages/ChatPage'
+import {useSocket} from './hooks/useSocket.js'
 
 
 
@@ -25,10 +28,16 @@ const browserRouter = createBrowserRouter([
   { path: '/login', element: <Login /> },
 
   { path: '/profile/edit', element: <EditProfile /> },
+  { path: '/chat', element: <ChatPage /> },
 
 ])
 
 function App() {
+
+  // socket connection
+  const { user } = useSelector(state => state.auth);
+  useSocket(user?._id);
+
   return <RouterProvider router={browserRouter} />
 }
 

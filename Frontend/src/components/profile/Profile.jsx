@@ -14,10 +14,10 @@ const Profile = () => {
   const userId = params.id;
   useGetUserProfile({ userId });
 
-  const { userProfile ,user } = useSelector(store => store.auth)
+  const { userProfile, user } = useSelector(store => store.auth)
   const [activeTab, setActiveTab] = useState('posts')
 
-  const isloggedInUserProfile = user._id === userProfile._id;
+  const isloggedInUserProfile = user?._id === userProfile?._id;
   const isFollowing = user?.following?.includes(userId)
 
   const tabChangeHandler = async (tab) => {
@@ -39,7 +39,9 @@ const Profile = () => {
         <div className='flex justify-center md:w-1/3'>
           <Avatar className='w-40 h-40 md:w-48 md:h-48 ring-4 ring-orange-100 shadow-lg cursor-pointer'>
             <AvatarImage src={userProfile?.profilePhoto} />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>
+              {user?.username?.charAt(0)?.toUpperCase()}
+            </AvatarFallback>
           </Avatar>
         </div>
 
@@ -123,9 +125,16 @@ const Profile = () => {
             </div>
 
             <div>
+              <p className='text-2xl font-semibold text-gray-800 cursor-pointer'>
+                {userProfile?.name}
+              </p>
               <p className='text-gray-700 leading-relaxed'>
                 {userProfile?.bio}
               </p>
+            </div>
+
+            <div>
+
             </div>
 
           </div>

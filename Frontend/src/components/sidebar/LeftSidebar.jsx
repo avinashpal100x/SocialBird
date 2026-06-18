@@ -69,6 +69,9 @@ const LeftSidebar = () => {
     else if (title === 'Home') {
       navigate(`/`)
     }
+    else if(title == 'Messages'){
+      navigate(`/chat`)
+    }
   }
 
 
