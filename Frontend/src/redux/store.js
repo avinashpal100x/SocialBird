@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authSlice from "./authSlice.js";
 import postSlice from './postSlice.js'
 import chatSlice from './chatSlice.js'
+import notificationSlice from './notificationSlice.js'
 
 
 
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   auth: authSlice,
   post: postSlice,
   chat: chatSlice,
+  notification:notificationSlice
 });
 
 

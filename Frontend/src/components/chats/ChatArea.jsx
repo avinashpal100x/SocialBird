@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState,useEffect } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { MessageCircleCode } from 'lucide-react'
 import { Input } from '../ui/input'
@@ -6,6 +6,9 @@ import { Button } from '../ui/button'
 import { useSelector } from 'react-redux'
 import Messages from './Messages'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { addMessages,setMessages } from '@/redux/chatSlice.js'
 
 
 
@@ -15,6 +18,49 @@ const ChatArea = () => {
     const { onlineUsers } = useSelector(store => store.chat)
 
     const isOnline = onlineUsers?.includes(selectedChatUser?._id)
+
+    const [message, setMessage] = useState("")
+    const dispatch = useDispatch();
+
+
+    const sendMessageHandler = async () => {
+        try {
+            if (!message.trim()) return;
+
+            const res = await axios.post(`http://localhost:5000/api/v1/message/send/${selectedChatUser?._id}`,
+                { message },
+                { withCredentials: true }
+            )
+
+            if (res.data.success) {
+                dispatch(addMessages(res?.data?.newMessage))
+                setMessage("")
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getMessageHandler = async () => {
+        try {
+            const res = await axios.get(`http://localhost:5000/api/v1/message/get/${selectedChatUser?._id}`,
+                { withCredentials: true }
+            )
+            if(res.data.success){
+                dispatch(setMessage(res?.data?.message))
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+    useEffect(()=>{
+        if(selectedChatUser?._id){
+            getMessageHandler();
+        }
+    },[selectedChatUser])
+
 
 
     return (
@@ -73,11 +119,15 @@ const ChatArea = () => {
                             <div className="flex items-center gap-3 bg-white rounded-full border border-orange-100 px-3 py-2 shadow-[0_10px_30px_rgba(255,107,53,0.08)]">
 
                                 <Input
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
                                     placeholder="Type a message..."
                                     className="flex-1 border-none shadow-none focus-visible:ring-0 bg-transparent placeholder:text-gray-400"
                                 />
 
-                                <Button className="h-11 px-8 rounded-full bg-linear-to-r from-[#FF6B35] to-[#FFA94D] hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg shadow-orange-200 cursor-pointer">
+                                <Button
+                                    onClick={sendMessageHandler}
+                                    className="h-11 px-8 rounded-full bg-linear-to-r from-[#FF6B35] to-[#FFA94D] hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg shadow-orange-200 cursor-pointer">
                                     Send
                                 </Button>
 

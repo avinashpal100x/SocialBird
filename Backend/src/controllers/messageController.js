@@ -41,7 +41,6 @@ export const sendMessage = async (req, res) => {
         const receieverSocketId = getReceiverSocketId(receiverId);
         if (receieverSocketId) {
             const io = getIO();
-
             io.to(receieverSocketId)
                 .emit(SOCKET_EVENTS.RECEIVE_MESSAGE, newMessage)
         }
@@ -49,7 +48,7 @@ export const sendMessage = async (req, res) => {
         return res.status(201).json({
             success: true,
             message: "Message Sent",
-            data: newMessage
+            newMessage
         })
     }
     catch (error) {

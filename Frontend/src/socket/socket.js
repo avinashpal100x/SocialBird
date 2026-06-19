@@ -1,21 +1,26 @@
-import { io } from 'socket.io-client'
+import { io } from "socket.io-client";
 
 let socket = null;
 
 export const connectSocket = (userId) => {
-    if (!userId) return;
+    if (!userId) return null;
+
+    // Already connected
+    if (socket?.connected) {
+        return socket;
+    }
 
     socket = io("http://localhost:5000", {
         query: { userId },
-        withCredentials: true
-    })
+        withCredentials: true,
+    });
+
     return socket;
-}
+};
 
 export const getSocket = () => socket;
 
 export const disconnectSocket = () => {
-
     if (socket) {
         socket.disconnect();
         socket = null;

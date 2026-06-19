@@ -18,8 +18,7 @@ const ChatSidebar = () => {
     }, [dispatch])
 
     const { onlineUsers } = useSelector(store => store.chat)
-    console.log("onlineUsers", onlineUsers);
-    
+
 
     return (
         <div className="h-screen bg-[#fff8f5] overflow-hidden relative">
@@ -83,9 +82,7 @@ const ChatSidebar = () => {
 
                                         < div
                                             key={user?._id}
-                                            onClick={() =>
-                                                dispatch(setSelectedChatUser(user))
-                                            }
+                                            onClick={() => dispatch(setSelectedChatUser(user))}
                                             className="group flex items-center gap-4 p-4 rounded-3xl cursor-pointer transition-all duration-300 hover:bg-orange-50 hover:shadow-md hover:-translate-y-1"
                                         >
 

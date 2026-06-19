@@ -7,6 +7,7 @@ import SuggestedUsers from './SuggestedUsers'
 const RightSidebar = () => {
 
   const { user } = useSelector(store => store.auth)
+  
   if(!user) return null;
 
   return (

@@ -10,6 +10,7 @@ import Login from './pages/AuthPage/LoginPage'
 import EditProfile from './pages/EditProfilePage'
 import ChatPage from './pages/ChatPage'
 import {useSocket} from './hooks/useSocket.js'
+import NotificationsPage from './pages/NotificationsPage'
 
 
 
@@ -29,6 +30,7 @@ const browserRouter = createBrowserRouter([
 
   { path: '/profile/edit', element: <EditProfile /> },
   { path: '/chat', element: <ChatPage /> },
+  { path: '/notifications/:id', element: <NotificationsPage /> },
 
 ])
 

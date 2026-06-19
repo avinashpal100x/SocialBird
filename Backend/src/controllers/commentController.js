@@ -1,5 +1,9 @@
 import { Post } from '../models/postModel.js'
 import { Comment } from '../models/commentModel.js'
+import { createNotification } from '../utils/createNotification.js'
+import { getIO } from '../socket/socket.js'
+import { getReceiverSocketId } from '../socket/socket.js'
+
 
 
 // add comment
@@ -33,6 +37,34 @@ export const addComment = async (req, res) => {
 
         post.comments.push(comment._id);
         await post.save();
+
+        const io = getIO();
+
+        // Create notification if not own post
+        if (post.author.toString() !== authorId) {
+
+            const notification = await createNotification({
+                sender: authorId,
+                receiver: post.author,
+                type: "COMMENT",
+                post: post._id
+            });
+
+            // Find receiver socket
+            const receiverSocketId = getReceiverSocketId(post.author.toString());
+
+            // Send notification only to receiver
+            if (receiverSocketId) {
+                io.to(receiverSocketId).emit("newNotification", notification);
+            }
+        }
+
+        // Emit socket event to all connected clients
+        io.emit("newComment", {
+            postId,
+            comment
+        });
+
 
         return res.status(201).json({
             message: "Comment added",

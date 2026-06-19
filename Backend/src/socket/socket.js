@@ -50,8 +50,6 @@ export const initializeSocket = (server) => {
         // disconnect listener
         socket.on(SOCKET_EVENTS.DISCONNECT, () => {
 
-            console.log("User Disconnected", socket.id);
-
             // remove user
             userSocketMap.delete(userId)
 

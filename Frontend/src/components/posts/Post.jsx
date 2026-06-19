@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogHeader, DialogDescription } from '../ui/dialog'
 import { MoreHorizontal, MessageCircle, Send, Bookmark } from 'lucide-react'
@@ -21,9 +21,19 @@ const Post = ({ post }) => {
   const [open, setOpen] = useState(false);
   const { user } = useSelector(store => store.auth)
   const { posts } = useSelector(store => store.post)
-  const [liked, setLiked] = useState(post?.likes?.includes(user?._id) || false)
-  const [countLikes, setCountLikes] = useState(post?.likes?.length)
-  const [comment, setComment] = useState(post?.comments || [])
+
+  const [liked, setLiked] = useState(false)
+  const [countLikes, setCountLikes] = useState(0)
+  useEffect(() => {
+    setLiked(post?.likes?.includes(user?._id) || false);
+    setCountLikes(post?.likes?.length || 0);
+  }, [post?.likes, user?._id]);
+
+  const [comment, setComment] = useState([])
+  useEffect(() => {
+    setComment(post?.comments || []);
+  }, [post?.comments]);
+
   const dispatch = useDispatch();
 
 
@@ -57,6 +67,7 @@ const Post = ({ post }) => {
     try {
       const action = liked ? "dislike" : "like"
       const res = await axios.get(`http://localhost:5000/api/v1/post/${post._id}/${action}`, { withCredentials: true })
+      
       if (res.data.success) {
         const updatedLikes = liked ? countLikes - 1 : countLikes + 1
         setCountLikes(updatedLikes)
@@ -98,8 +109,7 @@ const Post = ({ post }) => {
           withCredentials: true
         }
       );
-
-      console.log(res.data);
+      
 
       if (res.data.success) {
         const updatedCommentData = [...comment, res.data.comment];
@@ -147,7 +157,7 @@ const Post = ({ post }) => {
           <div className='flex flex-col gap-0.5'>
             <h1 className='flex items-center gap-2 font-semibold text-[15px] text-[#1f1b19] leading-none'>
               {post?.author?.username}
-              {user._id === post.author._id && (
+              {user?._id === post?.author?._id && (
                 <Badge className='h-5 px-2 text-[10px] rounded-full bg-orange-100 text-orange-700 border border-orange-200 shadow-sm'>
                   Author
                 </Badge>
@@ -200,7 +210,7 @@ const Post = ({ post }) => {
 
               {/* delete */}
               {
-                user && user._id === post?.author?._id && (
+                user && user?._id === post?.author?._id && (
                   <Button
                     onClick={deletePostHandler}
                     variant="ghost"
