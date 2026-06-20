@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { MessageCircleCode } from 'lucide-react'
 import { Input } from '../ui/input'
@@ -8,7 +8,8 @@ import Messages from './Messages'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
-import { addMessages,setMessages} from '@/redux/chatSlice.js'
+import { addMessages, setMessages } from '@/redux/chatSlice.js'
+import useGetMessage from '@/hooks/useGetMessage.js'
 
 
 
@@ -42,24 +43,26 @@ const ChatArea = () => {
         }
     }
 
-    const getMessageHandler = async () => {
-        try {
-            const res = await axios.get(`http://localhost:5000/api/v1/message/get/${selectedChatUser?._id}`,
-                { withCredentials: true }
-            )
-            if(res.data.success){
-                dispatch(setMessages(res?.data?.messages))
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-    
-    useEffect(()=>{
-        if(selectedChatUser?._id){
-            getMessageHandler();
-        }
-    },[selectedChatUser])
+    const getMessageHandler = () => useGetMessage(selectedChatUser?._id)
+
+    // const getMessageHandler = async () => {
+    //     try {
+    //         const res = await axios.get(`http://localhost:5000/api/v1/message/get/${selectedChatUser?._id}`,
+    //             { withCredentials: true }
+    //         )
+    //         if(res.data.success){
+    //             dispatch(setMessages(res?.data?.messages))
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
+
+    // useEffect(()=>{
+    //     if(selectedChatUser?._id){
+    //         getMessageHandler();
+    //     }
+    // },[selectedChatUser])
 
 
 

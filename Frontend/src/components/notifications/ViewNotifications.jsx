@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { useParams } from 'react-router-dom'
-import useGetAllNotifications from '@/hooks/useGetAllNotifications'
+import useGetAllNotifications from '@/hooks/useGetAllNotifications.js'
 import axios from 'axios'
-import { markAllAsRead } from '@/redux/notificationSlice.js'
+
 
 
 

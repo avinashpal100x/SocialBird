@@ -5,9 +5,12 @@ import { Button } from '../ui/button'
 import { MessageCircle, Heart } from 'lucide-react'
 import useGetUserProfile from '@/hooks/useGetUserProfile.js'
 import { useParams, Link } from 'react-router-dom'
-import axios from 'axios'
-import { toast } from 'sonner'
-import { setUserProfile, setAuthUser } from '@/redux/authSlice.js'
+// import axios from 'axios'
+// import { toast } from 'sonner'
+// import { setUserProfile, setAuthUser } from '@/redux/authSlice.js'
+import { followOrUnfollow } from '@/actions/postActions.js'
+
+
 
 const Profile = () => {
 
@@ -33,58 +36,61 @@ const Profile = () => {
         : activeTab === 'reels' ? userProfile?.reels || []
           : []
 
-  const followOrUnfollowHandler = async () => {
-    try {
-      const res = await axios.post(
-        `http://localhost:5000/api/v1/user/followorunfollow/${userId}`,
-        {},
-        { withCredentials: true }
-      );
+  const floHandler = () => followOrUnfollow({ userId, dispatch, userProfile, user })
 
-      if (res.data.success) {
-        if (res.data.action === "followed") {
-          dispatch(
-            setUserProfile({
-              ...userProfile,
-              followers: [...(userProfile?.followers || []), user._id]
-            })
-          );
+  // const followOrUnfollowHandler = async () => {
+  //   try {
+  //     const res = await axios.post(
+  //       `http://localhost:5000/api/v1/user/followorunfollow/${userId}`,
+  //       {},
+  //       { withCredentials: true }
+  //     );
 
-          dispatch(
-            setAuthUser({
-              ...user,
-              following: [...(user?.following || []), userProfile._id]
-            })
-          );
-        } else {
-          dispatch(
-            setUserProfile({
-              ...userProfile,
-              followers: userProfile?.followers?.filter(
-                (id) => id.toString() !== user._id.toString()
-              )
-            })
-          );
+  //     if (res.data.success) {
+  //       if (res.data.action === "followed") {
+  //         dispatch(
+  //           setUserProfile({
+  //             ...userProfile,
+  //             followers: [...(userProfile?.followers || []), user._id]
+  //           })
+  //         );
 
-          dispatch(
-            setAuthUser({
-              ...user,
-              following: user?.following?.filter(
-                (id) =>
-                  id.toString() !== userProfile?._id?.toString()
-              )
-            })
-          );
-        }
+  //         dispatch(
+  //           setAuthUser({
+  //             ...user,
+  //             following: [...(user?.following || []), userProfile._id]
+  //           })
+  //         );
+  //       }
+  //       else {
+  //         dispatch(
+  //           setUserProfile({
+  //             ...userProfile,
+  //             followers: userProfile?.followers?.filter(
+  //               (id) => id.toString() !== user._id.toString()
+  //             )
+  //           })
+  //         );
 
-        toast.success(res.data.message);
-      }
-    } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Something went wrong"
-      );
-    }
-  };
+  //         dispatch(
+  //           setAuthUser({
+  //             ...user,
+  //             following: user?.following?.filter(
+  //               (id) =>
+  //                 id.toString() !== userProfile?._id?.toString()
+  //             )
+  //           })
+  //         );
+  //       }
+
+  //       toast.success(res.data.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error(
+  //       error?.response?.data?.message || "Something went wrong"
+  //     );
+  //   }
+  // };
 
   return (
     <div className='max-w-5xl mx-auto px-4 py-10'>
@@ -133,7 +139,7 @@ const Profile = () => {
               ) : isFollowing ? (
                 <>
                   <Button
-                    onClick={followOrUnfollowHandler}
+                    onClick={floHandler}
                     className='bg-orange-500 hover:bg-orange-600 text-white rounded-xl cursor-pointer'
                   >
                     Unfollow
@@ -148,7 +154,7 @@ const Profile = () => {
                 </>
               ) : (
                 <Button
-                  onClick={followOrUnfollowHandler}
+                  onClick={floHandler}
                   className='bg-orange-500 hover:bg-orange-600 text-white rounded-xl cursor-pointer'
                 >
                   Follow

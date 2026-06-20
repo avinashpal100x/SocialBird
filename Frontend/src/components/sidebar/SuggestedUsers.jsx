@@ -1,12 +1,57 @@
-import React from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { setAuthUser } from '@/redux/authSlice';
 
 const SuggestedUsers = () => {
 
-    const { suggestedUsers, user } = useSelector(store => store.auth)
+    const { suggestedUsers, user } = useSelector(
+        store => store.auth
+    );
 
+    const dispatch = useDispatch();
+
+    const handleFollowOrUnfollow = async (suggestedUserId) => {
+        try {
+
+            const res = await axios.post(`http://localhost:5000/api/v1/user/followorunfollow/${suggestedUserId}`,
+                {},
+                { withCredentials: true }
+            );
+
+            if (res.data.success) {
+
+                let updatedFollowing;
+
+                const isFollowing = user?.following?.includes(suggestedUserId);
+
+                if (isFollowing) {
+                    // Unfollow
+                    updatedFollowing = user.following.filter(id => id !== suggestedUserId);
+                } else {
+                    // Follow
+                    updatedFollowing = [...user.following, suggestedUserId];
+                }
+
+                dispatch(
+                    setAuthUser({
+                        ...user,
+                        following: updatedFollowing
+                    })
+                );
+
+                toast.success(res.data.message);
+            }
+
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.message || "Something went wrong"
+            );
+        }
+    };
 
     return (
         <div className='mt-5 px-5 py-4 rounded-2xl bg-white border border-orange-100 shadow-sm'>
@@ -24,13 +69,15 @@ const SuggestedUsers = () => {
             {
                 suggestedUsers?.map((suggestedUser) => {
 
-                    const isFollowing = user?.following?.includes(suggestedUser?._id)
+                    const isFollowing =
+                        user?.following?.includes(suggestedUser?._id);
 
                     return (
                         <div
                             key={suggestedUser?._id}
                             className='flex items-center gap-3 mb-5 last:mb-0'
                         >
+
                             <Link to={`/profile/${suggestedUser?._id}`}>
                                 <Avatar className='w-12 h-12 ring-2 ring-orange-200 shadow-sm flex-shrink-0'>
                                     <AvatarImage src={suggestedUser?.profilePhoto} />
@@ -52,27 +99,24 @@ const SuggestedUsers = () => {
                                 </span>
                             </div>
 
-                            {
-                                isFollowing ?
-                                    (
-                                        <button className='px-4 py-1.5 rounded-lg bg-orange-500 text-white text-sm font-medium hover:bg-orange-600 active:scale-95 transition-all duration-200 shadow-sm cursor-pointer whitespace-nowrap'>
-                                            Unfollow
-                                        </button>
+                            <button
+                                onClick={() =>
+                                    handleFollowOrUnfollow(
+                                        suggestedUser?._id
                                     )
-                                    :
-                                    (
-                                        <button className='px-4 py-1.5 rounded-lg bg-orange-500 text-white text-sm font-medium hover:bg-orange-600 active:scale-95 transition-all duration-200 shadow-sm cursor-pointer whitespace-nowrap'>
-                                            Follow
-                                        </button>
-                                    )
-                            }
+                                }
+                                className='px-4 py-1.5 rounded-lg bg-orange-500 text-white text-sm font-medium hover:bg-orange-600 active:scale-95 transition-all duration-200 shadow-sm cursor-pointer whitespace-nowrap'
+                            >
+                                {isFollowing ? "Unfollow" : "Follow"}
+                            </button>
 
                         </div>
-                    )
+                    );
                 })
             }
-        </div>
-    )
-}
 
-export default SuggestedUsers
+        </div>
+    );
+};
+
+export default SuggestedUsers;
