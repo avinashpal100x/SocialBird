@@ -1,59 +1,62 @@
 import axios from "axios";
 import { toast } from "sonner";
-import { setUserProfile, setAuthUser } from '../redux/authSlice.js'
+import { setPosts } from '../redux/postSlice.js'
 
 
-export const followOrUnfollow = async ({userId, dispatch, userProfile, user}) => {
-    
+export const deletePost = async ({ postId, posts, dispatch }) => {
     try {
-        const res = await axios.post(
-            `http://localhost:5000/api/v1/user/followorunfollow/${userId}`,
-            {},
-            { withCredentials: true }
-        );
-
+        const res = await axios.delete(`http://localhost:5000/api/v1/post/delete/${postId}`, { withCredentials: true });
         if (res.data.success) {
-            if (res.data.action === "followed") {
-                dispatch(
-                    setUserProfile({
-                        ...userProfile,
-                        followers: [...(userProfile?.followers || []), user._id]
-                    })
-                );
-
-                dispatch(
-                    setAuthUser({
-                        ...user,
-                        following: [...(user?.following || []), userProfile._id]
-                    })
-                );
-            }
-            else {
-                dispatch(
-                    setUserProfile({
-                        ...userProfile,
-                        followers: userProfile?.followers?.filter(
-                            (id) => id.toString() !== user._id.toString()
-                        )
-                    })
-                );
-
-                dispatch(
-                    setAuthUser({
-                        ...user,
-                        following: user?.following?.filter(
-                            (id) =>
-                                id.toString() !== userProfile?._id?.toString()
-                        )
-                    })
-                );
-            }
-
-            toast.success(res.data.message);
+            const updatedPosts = posts.filter((postItem) => postItem?._id !== postId);
+            dispatch(setPosts(updatedPosts))
+            toast.success(res.data.message)
         }
-    } catch (error) {
+    }
+    catch (error) {
         toast.error(
             error?.response?.data?.message || "Something went wrong"
         );
     }
-};
+}
+
+export const likeDislike = async ({
+    postId,
+    liked,
+    setLiked,
+    countLikes,
+    setCountLikes,
+    posts,
+    user,
+    dispatch}) => {
+
+    try {
+        const action = liked ? "dislike" : "like"
+        const res = await axios.get(`http://localhost:5000/api/v1/post/${postId}/${action}`, { withCredentials: true })
+
+        if (res.data.success) {
+            const updatedLikes = liked ? countLikes - 1 : countLikes + 1
+            setCountLikes(updatedLikes)
+            setLiked(!liked);
+
+            // updated liked posts
+            const updatedLikedPost = posts.map((p) =>
+                p._id === postId
+                    ? {
+                        ...p,
+                        likes: liked
+                            ? p.likes.filter((id) => id !== user._id)
+                            : [...p.likes, user._id]
+                    }
+                    : p
+            );
+
+            dispatch(setPosts(updatedLikedPost));
+            toast.success(res.data.message)
+        }
+    }
+    catch (error) {
+        toast.error(
+            error?.response?.data?.message || "Something went wrong"
+        );
+    }
+}

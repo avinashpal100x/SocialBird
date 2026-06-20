@@ -5,53 +5,21 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { setAuthUser } from '@/redux/authSlice';
+import { rightSideFollowOrUnfollow } from '@/actions/userActions.js'
+
+
 
 const SuggestedUsers = () => {
 
-    const { suggestedUsers, user } = useSelector(
-        store => store.auth
-    );
+    const { suggestedUsers, user } = useSelector(store => store.auth);
 
     const dispatch = useDispatch();
 
-    const handleFollowOrUnfollow = async (suggestedUserId) => {
-        try {
-
-            const res = await axios.post(`http://localhost:5000/api/v1/user/followorunfollow/${suggestedUserId}`,
-                {},
-                { withCredentials: true }
-            );
-
-            if (res.data.success) {
-
-                let updatedFollowing;
-
-                const isFollowing = user?.following?.includes(suggestedUserId);
-
-                if (isFollowing) {
-                    // Unfollow
-                    updatedFollowing = user.following.filter(id => id !== suggestedUserId);
-                } else {
-                    // Follow
-                    updatedFollowing = [...user.following, suggestedUserId];
-                }
-
-                dispatch(
-                    setAuthUser({
-                        ...user,
-                        following: updatedFollowing
-                    })
-                );
-
-                toast.success(res.data.message);
-            }
-
-        } catch (error) {
-            toast.error(
-                error?.response?.data?.message || "Something went wrong"
-            );
-        }
-    };
+    const followOrUnfollowHandler = (suggestedUserId) => rightSideFollowOrUnfollow({
+        suggestedUserId,
+        dispatch,
+        user
+    })
 
     return (
         <div className='mt-5 px-5 py-4 rounded-2xl bg-white border border-orange-100 shadow-sm'>
@@ -69,8 +37,7 @@ const SuggestedUsers = () => {
             {
                 suggestedUsers?.map((suggestedUser) => {
 
-                    const isFollowing =
-                        user?.following?.includes(suggestedUser?._id);
+                    const isFollowing = user?.following?.includes(suggestedUser?._id);
 
                     return (
                         <div
@@ -100,11 +67,7 @@ const SuggestedUsers = () => {
                             </div>
 
                             <button
-                                onClick={() =>
-                                    handleFollowOrUnfollow(
-                                        suggestedUser?._id
-                                    )
-                                }
+                                onClick={() => followOrUnfollowHandler(suggestedUser?._id)}
                                 className='px-4 py-1.5 rounded-lg bg-orange-500 text-white text-sm font-medium hover:bg-orange-600 active:scale-95 transition-all duration-200 shadow-sm cursor-pointer whitespace-nowrap'
                             >
                                 {isFollowing ? "Unfollow" : "Follow"}

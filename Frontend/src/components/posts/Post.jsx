@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import { setPosts, setSelectedPost } from '@/redux/postSlice'
 import { formatDistanceToNow } from "date-fns";
 import { Badge } from '../ui/badge'
+import { deletePost, likeDislike } from '@/actions/postActions.js'
 
 
 
@@ -47,54 +48,24 @@ const Post = ({ post }) => {
     }
   }
 
-  const deletePostHandler = async () => {
-    try {
-      const res = await axios.delete(`http://localhost:5000/api/v1/post/delete/${post._id}`, { withCredentials: true });
-      if (res.data.success) {
-        const updatedPosts = posts.filter((postItem) => postItem?._id !== post?._id);
-        dispatch(setPosts(updatedPosts))
-        toast.success(res.data.message)
-      }
-    }
-    catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Something went wrong"
-      );
-    }
-  }
 
-  const likeDislikeHandler = async () => {
-    try {
-      const action = liked ? "dislike" : "like"
-      const res = await axios.get(`http://localhost:5000/api/v1/post/${post._id}/${action}`, { withCredentials: true })
+  const deletePostHandler = () => deletePost({
+    postId: post?._id,
+    posts,
+    dispatch
+  })
 
-      if (res.data.success) {
-        const updatedLikes = liked ? countLikes - 1 : countLikes + 1
-        setCountLikes(updatedLikes)
-        setLiked(!liked);
+  const likeDislikeHandler = () => likeDislike({
+    postId: post?._id,
+    liked,
+    setLiked,
+    countLikes,
+    setCountLikes,
+    posts,
+    user,
+    dispatch
+  })
 
-        // updated liked posts
-        const updatedLikedPost = posts.map((p) =>
-          p._id === post._id
-            ? {
-              ...p,
-              likes: liked
-                ? p.likes.filter((id) => id !== user._id)
-                : [...p.likes, user._id]
-            }
-            : p
-        );
-
-        dispatch(setPosts(updatedLikedPost));
-        toast.success(res.data.message)
-      }
-    }
-    catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Something went wrong"
-      );
-    }
-  }
 
   const commentHandler = async () => {
     try {
