@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { connectSocket } from '../socket/socket'
 import { addMessages, setOnlineUsers } from '../redux/chatSlice.js'
-import { addNotifications ,setNotifications} from '../redux/notificationSlice.js'
+import { addNotifications, setNotifications } from '../redux/notificationSlice.js'
 import { setPosts } from '../redux/postSlice.js'
 import store from '../redux/store.js'
 
@@ -11,6 +11,7 @@ import store from '../redux/store.js'
 export const useSocket = (userId) => {
 
     const dispatch = useDispatch();
+    const { selectedChatUser } = useSelector(store => store.auth)
 
     useEffect(() => {
 
@@ -23,7 +24,13 @@ export const useSocket = (userId) => {
         });
 
         socket.on("receive_message", (message) => {
-            dispatch(addMessages(message));
+            if (
+                selectedChatUser &&
+                (message.senderId === selectedChatUser._id ||
+                    message.receiverId === selectedChatUser._id)
+            ) {
+                dispatch(addMessages(message));
+            }
         });
 
         socket.on("newNotification", (notification) => {
@@ -70,6 +77,6 @@ export const useSocket = (userId) => {
             socket.off("newComment");
         };
 
-    }, [userId, dispatch]);
+    }, [userId, dispatch,selectedChatUser]);
 
 }

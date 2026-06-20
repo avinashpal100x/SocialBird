@@ -5,10 +5,11 @@ export const formatUser = (user) => ({
     username: user.username,
     email: user.email,
     profilePhoto: user.profilePhoto,
-    posts:user.posts,
+    posts: user.posts,
     bio: user.bio,
     gender: user.gender,
     followers: user.followers,
     following: user.following,
-    savedPosts: user.savedPosts
+    bookmarks: user.bookmarks,
+
 })

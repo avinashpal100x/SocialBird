@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import CreatePost from '../posts/CreatePost';
 import { markAllAsRead } from '@/redux/notificationSlice.js'
+import { setAuthUser } from '@/redux/authSlice.js'
+import {disconnectSocket} from '@/socket/socket'
 
 
 
@@ -17,9 +19,10 @@ const LeftSidebar = () => {
   const [open, setOpen] = useState(false);
 
   const { user } = useSelector(store => store.auth);
-  const { notifications } = useSelector(store => store.notification);
 
+  const { notifications } = useSelector(store => store.notification);
   const unreadCount = notifications.filter(notification => !notification.isRead).length;
+
 
   const sidebarItems = [
     { title: "Home", icon: Home },
@@ -52,6 +55,8 @@ const LeftSidebar = () => {
 
       if (res.data.success) {
         toast.success(res.data.message);
+        disconnectSocket()
+        dispatch(setAuthUser(null))
         navigate("/login");
       }
     } catch (error) {
@@ -77,6 +82,8 @@ const LeftSidebar = () => {
       dispatch(markAllAsRead())
     }
   };
+
+
 
   return (
     <div className="w-62.5 h-screen bg-[#fff8f5] border-r border-orange-100 shadow-[0_10px_30px_rgba(26,22,20,0.04)] flex flex-col px-6 py-6 sticky top-0">

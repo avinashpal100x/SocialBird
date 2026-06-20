@@ -8,7 +8,7 @@ import Messages from './Messages'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
-import { addMessages,setMessages } from '@/redux/chatSlice.js'
+import { addMessages,setMessages} from '@/redux/chatSlice.js'
 
 
 
@@ -48,7 +48,7 @@ const ChatArea = () => {
                 { withCredentials: true }
             )
             if(res.data.success){
-                dispatch(setMessage(res?.data?.message))
+                dispatch(setMessages(res?.data?.messages))
             }
         } catch (error) {
             console.log(error);

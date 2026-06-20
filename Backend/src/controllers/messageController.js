@@ -2,6 +2,8 @@ import { Conversation } from '../models/conversationModel.js'
 import { Message } from '../models/messageModel.js'
 import { getIO, getReceiverSocketId } from '../socket/socket.js'
 import { SOCKET_EVENTS } from '../socket/socketEvents.js'
+import { createNotification } from '../utils/createNotification.js'
+import mongoose from 'mongoose'
 
 
 
@@ -36,7 +38,12 @@ export const sendMessage = async (req, res) => {
             senderId,
             receiverId,
             message
-        })
+        });
+
+        conversation.messages.push(newMessage._id);
+
+        await conversation.save();
+
 
         const receieverSocketId = getReceiverSocketId(receiverId);
         if (receieverSocketId) {
@@ -67,22 +74,28 @@ export const getMessage = async (req, res) => {
         const receiverId = req.params.id;
 
         // check conversation
-        const conversation = await Conversation.find({
+        const conversation = await Conversation.findOne({
             participants: { $all: [senderId, receiverId] }
-        })
+        }).populate("messages");
 
         // if there is no previous conversation return empty array
-        if (!conversation) return res.status(200).json({
-            success: true,
-            messages: []
-        })
+        if (!conversation) {
+            return res.status(200).json({
+                success: true,
+                messages: []
+            });
+        }
 
-        return res.status(200).jsom({
+        return res.status(200).json({
             success: true,
-            messages: conversation?.messages
-        })
+            messages: conversation.messages
+        });
     }
     catch (error) {
-
+        console.error("Get message error:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
     }
 }

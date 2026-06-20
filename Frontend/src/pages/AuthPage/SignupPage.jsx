@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 
 const Signup = () => {
@@ -19,6 +20,7 @@ const Signup = () => {
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { user } = useSelector(store => store.auth)
 
   const changeEventHandler = (e) => {
     setInput({
@@ -54,6 +56,10 @@ const Signup = () => {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (user) navigate("/")
+  })
 
   return (
     <div className='min-h-screen bg-[#fff8f5] flex items-center justify-center px-4 sm:px-6 py-6 overflow-hidden relative'>

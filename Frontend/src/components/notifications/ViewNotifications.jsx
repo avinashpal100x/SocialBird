@@ -1,8 +1,10 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { useParams } from 'react-router-dom'
 import useGetAllNotifications from '@/hooks/useGetAllNotifications'
+import axios from 'axios'
+import { markAllAsRead } from '@/redux/notificationSlice.js'
 
 
 
@@ -13,8 +15,7 @@ const ViewNotifications = () => {
     useGetAllNotifications({ userId })
 
     const { notifications } = useSelector(store => store.notification);
-    console.log(notifications);
-
+    const dispatch = useDispatch();
 
     const getNotificationText = (type) => {
         switch (type) {
@@ -30,6 +31,21 @@ const ViewNotifications = () => {
                 return 'interacted with you';
         }
     };
+
+    useEffect(() => {
+        const readNotification = async () => {
+            try {
+                const res = await axios.put("http://localhost:5000/api/v1/notification/read", {}, { withCredentials: true })
+                if (res.data.success) {
+                    dispatch(markAllAsRead())
+                }
+            }
+            catch (error) {
+
+            }
+        }
+        readNotification()
+    },[dispatch])
 
     return (
         <div className="min-h-screen bg-[#fff8f5] relative overflow-hidden">

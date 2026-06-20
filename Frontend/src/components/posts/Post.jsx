@@ -67,7 +67,7 @@ const Post = ({ post }) => {
     try {
       const action = liked ? "dislike" : "like"
       const res = await axios.get(`http://localhost:5000/api/v1/post/${post._id}/${action}`, { withCredentials: true })
-      
+
       if (res.data.success) {
         const updatedLikes = liked ? countLikes - 1 : countLikes + 1
         setCountLikes(updatedLikes)
@@ -99,8 +99,7 @@ const Post = ({ post }) => {
   const commentHandler = async () => {
     try {
 
-      const res = await axios.post(
-        `http://localhost:5000/api/v1/comment/${post._id}/comment`,
+      const res = await axios.post(`http://localhost:5000/api/v1/comment/${post._id}/comment`,
         { text },
         {
           headers: {
@@ -109,7 +108,7 @@ const Post = ({ post }) => {
           withCredentials: true
         }
       );
-      
+
 
       if (res.data.success) {
         const updatedCommentData = [...comment, res.data.comment];
@@ -131,6 +130,20 @@ const Post = ({ post }) => {
         setText("");
       }
     } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Something went wrong"
+      );
+    }
+  }
+
+  const bookmarkHandler = async () => {
+    try {
+      const res = await axios.get(`http://localhost:5000/api/v1/post/${post._id}/bookmark`, { withCredentials: true })
+      if (res.data.success) {
+        toast.success(res.data.message)
+      }
+    }
+    catch (error) {
       toast.error(
         error?.response?.data?.message || "Something went wrong"
       );
@@ -196,13 +209,19 @@ const Post = ({ post }) => {
             <div className='relative z-10 flex flex-col gap-5'>
 
               {/* unfollow */}
-              <Button className='h-14 rounded-2xl bg-linear-to-r from-[#ff6b35] via-[#ff874f] to-[#FFA94D] hover:brightness-105 text-white text-[15px] font-semibold tracking-[0.2px] shadow-[0_10px_30px_rgba(255,107,53,0.28)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer border border-white/20'>
-                Unfollow
-              </Button>
+              {
+                user && user?._id != post?.author?._id &&
+                (
+                  <Button className='h-14 rounded-2xl bg-linear-to-r from-[#ff6b35] via-[#ff874f] to-[#FFA94D] hover:brightness-105 text-white text-[15px] font-semibold tracking-[0.2px] shadow-[0_10px_30px_rgba(255,107,53,0.28)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer border border-white/20'>
+                    Unfollow
+                  </Button>
+                )
+              }
 
               {/* bookmark */}
               <Button
                 variant="outline"
+                onClick={bookmarkHandler}
                 className='h-14 rounded-2xl border-orange-200/70 bg-white/80 hover:bg-orange-50 text-[#ab3500] text-[15px] font-semibold transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer shadow-sm hover:shadow-md'
               >
                 Bookmark
@@ -269,7 +288,9 @@ const Post = ({ post }) => {
           </div>
 
           <div>
-            <Bookmark className='cursor-pointer text-gray-700 hover:text-[#ff6b35] hover:scale-110 active:scale-95 transition-all duration-300 ease-out' />
+            <Bookmark
+              onClick={bookmarkHandler}
+              className='cursor-pointer text-gray-700 hover:text-[#ff6b35] hover:scale-110 active:scale-95 transition-all duration-300 ease-out' />
           </div>
 
         </div>

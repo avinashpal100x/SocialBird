@@ -11,7 +11,11 @@ const notificationSlice = createSlice({
         },
 
         addNotifications: (state, action) => {
+            console.log("Before:", state.notifications.length);
+
             state.notifications.unshift(action.payload);
+
+            console.log("After:", state.notifications.length);
         },
 
         markAllAsRead: (state) => {
@@ -19,7 +23,8 @@ const notificationSlice = createSlice({
                 ...notification,
                 isRead: true
             }));
-        }
+        },
+
     }
 });
 

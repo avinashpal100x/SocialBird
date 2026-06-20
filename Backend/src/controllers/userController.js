@@ -132,6 +132,7 @@ export const followOrUnfollow = async (req, res) => {
             ])
             return res.status(200).json({
                 message: `Unfollowed Successfully to ${targetUser?.name}`,
+                action: "unfollowed",
                 success: true
             })
         }
@@ -143,6 +144,7 @@ export const followOrUnfollow = async (req, res) => {
             ])
             return res.status(200).json({
                 message: `Followed Successfully to ${targetUser?.name}`,
+                action: "followed",
                 success: true
             })
         }

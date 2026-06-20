@@ -10,16 +10,39 @@ export const getNotifications = async (req, res) => {
             .populate({ path: "sender", select: "username profilePhoto" })
 
 
-res.status(200).json({
-    success: true,
-    notifications
-});
+        res.status(200).json({
+            success: true,
+            notifications
+        });
     }
     catch (error) {
-    console.error("Notifications error :", error);
-    return res.status(500).json({
-        message: "Internal server error",
-        success: false
-    })
-}
+        console.error("Notifications error :", error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        })
+    }
 };
+
+export const markNotificationAsRead = async (req, res) => {
+    try {
+        const userId = req.userId
+
+        await Notification.updateMany(
+            { receiver: userId, isRead: false },
+            { $set: { isRead: true } }
+        )
+
+        res.status(200).json({
+            success: true
+        })
+
+    }
+    catch (error) {
+        console.error("Read Notifications error :", error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        })
+    }
+}

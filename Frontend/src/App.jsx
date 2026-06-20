@@ -9,8 +9,9 @@ import Signup from './pages/AuthPage/SignupPage'
 import Login from './pages/AuthPage/LoginPage'
 import EditProfile from './pages/EditProfilePage'
 import ChatPage from './pages/ChatPage'
-import {useSocket} from './hooks/useSocket.js'
+import { useSocket } from './hooks/useSocket.js'
 import NotificationsPage from './pages/NotificationsPage'
+import ProtectedRoutes from './components/routesProtection/ProtectedRoutes'
 
 
 
@@ -18,7 +19,7 @@ const browserRouter = createBrowserRouter([
 
   {
     path: '/',
-    element: <LayoutPage />,
+    element: <ProtectedRoutes><LayoutPage /></ProtectedRoutes>,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'profile/:id', element: <ProfilePage /> }
@@ -28,9 +29,9 @@ const browserRouter = createBrowserRouter([
   { path: '/signup', element: <Signup /> },
   { path: '/login', element: <Login /> },
 
-  { path: '/profile/edit', element: <EditProfile /> },
-  { path: '/chat', element: <ChatPage /> },
-  { path: '/notifications/:id', element: <NotificationsPage /> },
+  { path: '/profile/edit', element: <ProtectedRoutes><EditProfile /></ProtectedRoutes> },
+  { path: '/chat', element: <ProtectedRoutes><ChatPage /></ProtectedRoutes> },
+  { path: '/notifications/:id', element: <ProtectedRoutes><NotificationsPage /></ProtectedRoutes> },
 
 ])
 

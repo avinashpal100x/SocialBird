@@ -42,8 +42,6 @@ export const initializeSocket = (server) => {
             userSocketMap.set(userId, socket.id)
         }
 
-        console.log(userSocketMap);
-
         // broadcast online users
         io.emit(SOCKET_EVENTS.GET_ONLINE_USERS, getOnlineUsers());
 
