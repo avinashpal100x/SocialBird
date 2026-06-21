@@ -3,6 +3,7 @@ import authSlice from "./authSlice.js";
 import postSlice from './postSlice.js'
 import chatSlice from './chatSlice.js'
 import notificationSlice from './notificationSlice.js'
+import storySlice from './storySlice.js'
 
 
 
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
   auth: authSlice,
   post: postSlice,
   chat: chatSlice,
-  notification:notificationSlice
+  notification:notificationSlice,
+  story:storySlice
 });
 
 

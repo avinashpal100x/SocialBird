@@ -3,12 +3,14 @@ import Feed from '../components/posts/Feed'
 import RightSidebar from '../components/sidebar/RightSidebar'
 import useGetAllPosts from '../hooks/useGetAllPosts.js'
 import useGetAllSuggestedUsers from '../hooks/useGetAllSuggestedUsers.js'
+import useGetAllStories from '../hooks/useGetAllStories.js'
 
 
 const HomePage = () => {
 
   useGetAllPosts();
   useGetAllSuggestedUsers();
+  useGetAllStories();
 
   return (
     <div className="flex">

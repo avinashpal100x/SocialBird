@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: "Notification" }],
+    stories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Story" }]
 }, { timestamps: true })
 
 export const User = mongoose.model("User", userSchema);

@@ -12,6 +12,8 @@ import postRouter from './routes/postRoute.js'
 import commentRouter from './routes/commentRoute.js'
 import messageRouter from './routes/messageRoute.js'
 import notificationRouter from './routes/notificationRoute.js'
+import storyRouter from './routes/storyRoute.js'
+
 
 import { initializeSocket } from './socket/socket.js'
 
@@ -37,6 +39,7 @@ app.use("/api/v1/post", postRouter)
 app.use("/api/v1/comment", commentRouter)
 app.use("/api/v1/message", messageRouter)
 app.use("/api/v1/notification", notificationRouter)
+app.use("/api/v1/story", storyRouter)
 
 
 // server

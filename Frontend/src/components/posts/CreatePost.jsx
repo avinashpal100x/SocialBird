@@ -42,9 +42,7 @@ const CreatePost = ({ open, setOpen }) => {
             const formData = new FormData();
             formData.append("caption", caption);
 
-            if (file) {
-                formData.append("image", file);
-            }
+            if (file) { formData.append("image", file); }
             const res = await axios.post(
                 "http://localhost:5000/api/v1/post/addpost",
                 formData,
@@ -70,7 +68,7 @@ const CreatePost = ({ open, setOpen }) => {
             toast.error(
                 error?.response?.data?.message || "Something went wrong"
             )
-            
+
         } finally {
             setLoading(false);
         }

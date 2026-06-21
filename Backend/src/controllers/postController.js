@@ -284,7 +284,7 @@ export const deletePost = async (req, res) => {
         // remove post from user
         await User.findByIdAndUpdate(authorId, { $pull: { posts: postId } });
 
-        // delte all coment of post
+        // delte all comment of post
         await Comment.deleteMany({ post: postId });
 
         return res.status(200).json({
