@@ -12,7 +12,7 @@ const useGetAllSuggestedUsers = () => {
 
         const fetchAllSuggestedUsers = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/v1/user/suggestions", { withCredentials: true });
+                const res = await axios.get("https://socialbird-hi0p.onrender.com/api/v1/user/suggestions", { withCredentials: true });
                 if (res.data.success) {
                     dispatch(setSuggestedUsers(res.data.users))
                 }

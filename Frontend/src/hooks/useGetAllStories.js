@@ -10,7 +10,7 @@ const useGetAllStories = () => {
     useEffect(() => {
         const fetchStories = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/v1/story/getstories", { withCredentials: true }
+                const res = await axios.get("https://socialbird-hi0p.onrender.com/api/v1/story/getstories", { withCredentials: true }
                 );
                 if (res.data.success) {
                     dispatch(setStories(res.data.stories))

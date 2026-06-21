@@ -35,7 +35,7 @@ const ViewNotifications = () => {
     useEffect(() => {
         const readNotification = async () => {
             try {
-                const res = await axios.put("http://localhost:5000/api/v1/notification/read", {}, { withCredentials: true })
+                const res = await axios.put("https://socialbird-hi0p.onrender.com/api/v1/notification/read", {}, { withCredentials: true })
                 if (res.data.success) {
                     dispatch(markAllAsRead())
                 }

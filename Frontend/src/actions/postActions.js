@@ -5,7 +5,7 @@ import { setPosts } from '../redux/postSlice.js'
 
 export const deletePost = async ({ postId, posts, dispatch }) => {
     try {
-        const res = await axios.delete(`http://localhost:5000/api/v1/post/delete/${postId}`, { withCredentials: true });
+        const res = await axios.delete(`https://socialbird-hi0p.onrender.com/api/v1/post/delete/${postId}`, { withCredentials: true });
         if (res.data.success) {
             const updatedPosts = posts.filter((postItem) => postItem?._id !== postId);
             dispatch(setPosts(updatedPosts))
@@ -31,7 +31,7 @@ export const likeDislike = async ({
 
     try {
         const action = liked ? "dislike" : "like"
-        const res = await axios.get(`http://localhost:5000/api/v1/post/${postId}/${action}`, { withCredentials: true })
+        const res = await axios.get(`https://socialbird-hi0p.onrender.com/api/v1/post/${postId}/${action}`, { withCredentials: true })
 
         if (res.data.success) {
             const updatedLikes = liked ? countLikes - 1 : countLikes + 1

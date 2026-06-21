@@ -28,7 +28,7 @@ const ChatArea = () => {
         try {
             if (!message.trim()) return;
 
-            const res = await axios.post(`http://localhost:5000/api/v1/message/send/${selectedChatUser?._id}`,
+            const res = await axios.post(`https://socialbird-hi0p.onrender.com/api/v1/message/send/${selectedChatUser?._id}`,
                 { message },
                 { withCredentials: true }
             )
@@ -44,25 +44,6 @@ const ChatArea = () => {
     }
 
     const getMessageHandler = () => useGetMessage(selectedChatUser?._id)
-
-    // const getMessageHandler = async () => {
-    //     try {
-    //         const res = await axios.get(`http://localhost:5000/api/v1/message/get/${selectedChatUser?._id}`,
-    //             { withCredentials: true }
-    //         )
-    //         if(res.data.success){
-    //             dispatch(setMessages(res?.data?.messages))
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
-
-    // useEffect(()=>{
-    //     if(selectedChatUser?._id){
-    //         getMessageHandler();
-    //     }
-    // },[selectedChatUser])
 
 
 

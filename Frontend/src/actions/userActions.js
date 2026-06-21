@@ -7,7 +7,7 @@ export const followOrUnfollow = async ({ userId, dispatch, userProfile, user }) 
 
     try {
         const res = await axios.post(
-            `http://localhost:5000/api/v1/user/followorunfollow/${userId}`,
+            `https://socialbird-hi0p.onrender.com/api/v1/user/followorunfollow/${userId}`,
             {},
             { withCredentials: true }
         );
@@ -61,7 +61,7 @@ export const followOrUnfollow = async ({ userId, dispatch, userProfile, user }) 
 export const rightSideFollowOrUnfollow = async ({ suggestedUserId, dispatch, user }) => {
     try {
 
-        const res = await axios.post(`http://localhost:5000/api/v1/user/followorunfollow/${suggestedUserId}`,
+        const res = await axios.post(`https://socialbird-hi0p.onrender.com/api/v1/user/followorunfollow/${suggestedUserId}`,
             {},
             { withCredentials: true }
         );

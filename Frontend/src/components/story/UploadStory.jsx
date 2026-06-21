@@ -50,7 +50,7 @@ const UploadStory = ({ open, setOpen }) => {
             setLoading(true)
 
             const res = await axios.post(
-                "http://localhost:5000/api/v1/story/addstory",
+                "https://socialbird-hi0p.onrender.com/api/v1/story/addstory",
                 formData,
                 {
                     headers: {

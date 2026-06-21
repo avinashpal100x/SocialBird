@@ -35,7 +35,7 @@ const Comments = ({ open, setOpen }) => {
         try {
 
             const res = await axios.post(
-                `http://localhost:5000/api/v1/comment/${selectedPost._id}/comment`,
+                `https://socialbird-hi0p.onrender.com/api/v1/comment/${selectedPost._id}/comment`,
                 { text },
                 {
                     headers: {

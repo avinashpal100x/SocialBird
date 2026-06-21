@@ -10,7 +10,7 @@ export const connectSocket = (userId) => {
         return socket;
     }
 
-    socket = io("http://localhost:5000", {
+    socket = io("https://socialbird-hi0p.onrender.com", {
         query: { userId },
         withCredentials: true,
     });

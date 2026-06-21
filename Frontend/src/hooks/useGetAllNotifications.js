@@ -11,7 +11,7 @@ const useGetAllNotifications = ({ userId }) => {
     useEffect(() => {
         const fetchAllNotifications = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/v1/notification/getnotifications/${userId}`, { withCredentials: true });
+                const res = await axios.get(`https://socialbird-hi0p.onrender.com/api/v1/notification/getnotifications/${userId}`, { withCredentials: true });
                 if (res.data.success) {
                     dispatch(setNotifications(res?.data?.notifications))
                 }

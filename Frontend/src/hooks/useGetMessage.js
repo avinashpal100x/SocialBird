@@ -11,7 +11,7 @@ const useGetMessage = ({ userId }) => {
     useEffect(() => {
         const fetchUserMessage = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/v1/message/get/userId`,
+                const res = await axios.get(`https://socialbird-hi0p.onrender.com/api/v1/message/get/userId`,
                     { withCredentials: true }
                 )
                 if (res.data.success) {

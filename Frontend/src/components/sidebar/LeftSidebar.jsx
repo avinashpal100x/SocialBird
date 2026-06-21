@@ -49,7 +49,7 @@ const LeftSidebar = () => {
   const logoutHandler = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/v1/auth/logout",
+        "https://socialbird-hi0p.onrender.com/api/v1/auth/logout",
         { withCredentials: true }
       );
 

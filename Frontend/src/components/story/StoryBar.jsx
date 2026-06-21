@@ -22,7 +22,7 @@ const StoryBar = () => {
     const storyClickHandler = async (story) => {
         setSelectedStory(story)
         try {
-            const res = axios.post(`http://localhost:5000/api/v1/story/${story?._id}/view`, {}, { withCredentials: true })
+            const res = axios.post(`https://socialbird-hi0p.onrender.com/api/v1/story/${story?._id}/view`, {}, { withCredentials: true })
         }
         catch (error) {
             console.log(error);
@@ -32,7 +32,7 @@ const StoryBar = () => {
     const deleteStoryHandler = async (story) => {
 
         try {
-            const res = await axios.delete(`http://localhost:5000/api/v1/story/delete/${story?._id}`, { withCredentials: true })
+            const res = await axios.delete(`https://socialbird-hi0p.onrender.com/api/v1/story/delete/${story?._id}`, { withCredentials: true })
 
             if (res.data.success) {
 
