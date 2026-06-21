@@ -4,7 +4,7 @@ const storySchema = new mongoose.Schema({
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     media: { type: String, required: true },
     mediaType: { type: String, enum: ['image', 'video'], required: true },
-    viewers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    viewers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
 }, { timestamps: true })
 
 storySchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });

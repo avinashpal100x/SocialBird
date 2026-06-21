@@ -75,7 +75,8 @@ export const getStories = async (req, res) => {
         const stories = await Story.find({
             author: { $in: [userId, ...user.following] }
         })
-            .populate("author", "name username profilePhoto")
+            .populate({ path: "author", select: "name profilePhoto" })
+            .populate("viewers", "username profilePhoto")
             .sort({ createdAt: -1 });
 
         return res.status(200).json({
@@ -150,7 +151,7 @@ export const deleteStory = async (req, res) => {
 
         return res.status(200).json({
             message: "Story deleted successfully",
-            success: false
+            success: true
         })
 
     }
