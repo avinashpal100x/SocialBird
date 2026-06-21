@@ -22,7 +22,7 @@ const EditProfile = () => {
     name: user?.name,
     username: user?.username,
     bio: user?.bio,
-    gender: user?.gender
+    gender: user?.gender || ""
   })
   const [previewPhoto, setPreviewPhoto] = useState(user?.profilePhoto)
   const dispatch = useDispatch();
