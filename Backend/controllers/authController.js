@@ -17,6 +17,24 @@ export const registerUser = async (req, res) => {
             })
         }
 
+        const errors = [];
+
+        if (name.length > 10) {
+            errors.push("Name cannot exceed 10 characters");
+        }
+        if (username.length > 10) {
+            errors.push("Username cannot exceed 10 characters");
+        }
+        if (password.length < 5) {
+            errors.push("Password must be at least 5 characters");
+        }
+        if (errors.length > 0) {
+            return res.status(400).json({
+                success: false,
+                errors,
+            });
+        }
+
         const user = await User.findOne({ $or: [{ username }, { email }] })
         if (user?.username === username) {
             return res.status(400).json({
