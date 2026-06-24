@@ -23,9 +23,15 @@ export const getProfile = async (req, res) => {
                     sort: { createdAt: -1 }
                 }
             })
+            .populate("bookmarks")
             .populate({
-                path: "bookmarks"
-            });
+                path: "followers",
+                select: "username profilePhoto bio"
+            })
+            .populate({
+                path: "following",
+                select: "username profilePhoto bio"
+            })
 
 
         return res.status(200).json({

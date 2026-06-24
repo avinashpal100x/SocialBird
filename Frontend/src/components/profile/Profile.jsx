@@ -6,6 +6,7 @@ import { MessageCircle, Heart } from 'lucide-react'
 import useGetUserProfile from '@/hooks/useGetUserProfile.js'
 import { useParams, Link } from 'react-router-dom'
 import { followOrUnfollow } from '@/actions/userActions.js'
+import FollowersFollowing from './FollowersFollowing'
 
 
 
@@ -18,6 +19,8 @@ const Profile = () => {
   const { userProfile, user } = useSelector(store => store.auth)
 
   const [activeTab, setActiveTab] = useState('posts')
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
 
   const dispatch = useDispatch()
 
@@ -35,7 +38,7 @@ const Profile = () => {
 
   const followOrUnfollowHandler = () => followOrUnfollow({ userId, dispatch, userProfile, user })
 
-  
+
   return (
     <div className='max-w-5xl mx-auto px-4 py-10'>
       {/* profile photo and user details */}
@@ -114,18 +117,30 @@ const Profile = () => {
                 <span className='text-gray-600'>posts</span>
               </p>
 
-              <p>
-                <span className='font-bold text-gray-900'>
+              <p
+                className="cursor-pointer"
+                onClick={() => {
+                  console.log("Followers clicked");
+                  setShowFollowers(true);
+                }}
+              >
+                <span className="font-bold">
                   {userProfile?.followers?.length || 0}
-                </span>{' '}
-                <span className='text-gray-600'>followers</span>
+                </span>{" "}
+                followers
               </p>
 
-              <p>
-                <span className='font-bold text-gray-900'>
+              <p
+                className="cursor-pointer"
+                onClick={() => {
+                  console.log("Following clicked");
+                  setShowFollowing(true);
+                }}
+              >
+                <span className="font-bold">
                   {userProfile?.following?.length || 0}
-                </span>{' '}
-                <span className='text-gray-600'>following</span>
+                </span>{" "}
+                following
               </p>
             </div>
 
@@ -208,6 +223,21 @@ const Profile = () => {
           ))}
         </div>
       </div>
+
+      <FollowersFollowing
+        open={showFollowers}
+        onClose={() => setShowFollowers(false)}
+        title="Followers"
+        users={userProfile?.followers}
+      />
+
+      <FollowersFollowing
+        open={showFollowing}
+        onClose={() => setShowFollowing(false)}
+        title="Following"
+        users={userProfile?.following}
+      />
+
     </div>
   )
 }
