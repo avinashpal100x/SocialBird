@@ -120,7 +120,6 @@ const Profile = () => {
               <p
                 className="cursor-pointer"
                 onClick={() => {
-                  console.log("Followers clicked");
                   setShowFollowers(true);
                 }}
               >
@@ -133,7 +132,6 @@ const Profile = () => {
               <p
                 className="cursor-pointer"
                 onClick={() => {
-                  console.log("Following clicked");
                   setShowFollowing(true);
                 }}
               >
